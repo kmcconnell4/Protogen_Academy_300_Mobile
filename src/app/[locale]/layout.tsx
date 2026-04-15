@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ClerkProvider } from '@clerk/nextjs';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/layout/PageTransition';
+import SearchTrigger from '@/components/search/SearchTrigger';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -30,6 +31,7 @@ export default async function LocaleLayout({
           </main>
         </PageTransition>
         <BottomNav />
+        <SearchTrigger />
       </NextIntlClientProvider>
     </ClerkProvider>
   );
