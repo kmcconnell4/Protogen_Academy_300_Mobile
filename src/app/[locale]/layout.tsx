@@ -30,7 +30,7 @@ export default async function LocaleLayout({
         <ServiceWorkerRegistrar />
         <OfflineBanner />
         <PageTransition>
-          <main style={{ paddingBottom: '80px' }}>
+          <main style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
             {children}
           </main>
         </PageTransition>

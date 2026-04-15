@@ -139,6 +139,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
+              paddingTop: 'env(safe-area-inset-top)',
             }}
           >
             {/* Search bar row */}

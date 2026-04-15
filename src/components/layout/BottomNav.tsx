@@ -56,6 +56,8 @@ export default function BottomNav() {
           <Link
             key={key}
             href={fullHref}
+            aria-label={t(labelKey as Parameters<typeof t>[0])}
+            aria-current={isActive ? 'page' : undefined}
             style={{
               display: 'flex',
               flexDirection: 'column',
