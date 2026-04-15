@@ -6,6 +6,8 @@ import { ClerkProvider } from '@clerk/nextjs';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/layout/PageTransition';
 import SearchTrigger from '@/components/search/SearchTrigger';
+import OfflineBanner from '@/components/ui/OfflineBanner';
+import ServiceWorkerRegistrar from '@/components/ui/ServiceWorkerRegistrar';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -25,6 +27,8 @@ export default async function LocaleLayout({
   return (
     <ClerkProvider>
       <NextIntlClientProvider locale={locale} messages={messages}>
+        <ServiceWorkerRegistrar />
+        <OfflineBanner />
         <PageTransition>
           <main style={{ paddingBottom: '80px' }}>
             {children}
