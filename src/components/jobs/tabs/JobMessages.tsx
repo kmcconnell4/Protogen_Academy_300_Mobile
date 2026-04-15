@@ -77,7 +77,8 @@ function formatTime(iso: string) {
   return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 
-export default function JobMessages({ job: _job }: JobMessagesProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function JobMessages(_props: JobMessagesProps) {
   const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
   const [inputValue, setInputValue] = useState('');
   const [mentionQuery, setMentionQuery] = useState<string | null>(null);

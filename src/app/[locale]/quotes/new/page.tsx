@@ -98,7 +98,13 @@ export default function NewQuotePage() {
       const quote = await createQuote({
         ...(selectedJobId ? { jobId: selectedJobId } : {}),
         createdAt: new Date().toISOString(),
-        lineItems: lineItems.map(({ productName: _n, productSku: _s, ...rest }) => rest),
+        lineItems: lineItems.map((li) => ({
+          productId: li.productId,
+          quantity: li.quantity,
+          unitPrice: li.unitPrice,
+          lineTotal: li.lineTotal,
+          ...(li.notes ? { notes: li.notes } : {}),
+        })),
         subtotal,
       });
       setShareUrl(quote.shareUrl);

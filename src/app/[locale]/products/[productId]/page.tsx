@@ -309,7 +309,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Documents */}
-            {product.documents.map((doc, i) => (
+            {product.documents.map((doc) => (
               <a
                 key={doc.id}
                 href={doc.url}
