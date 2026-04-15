@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@clerk/nextjs';
+import type { UserResource } from '@clerk/types';
 import { ChevronRight, Trash2, RefreshCw } from 'lucide-react';
+
+const clerkEnabled = (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? '').startsWith('pk_');
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -185,12 +188,12 @@ function ActionButton({
 
 // ─── Page ──────────────────────────────────────────────────────────────────
 
-export default function SettingsPage() {
+function SettingsContent({ clerkUser, isLoaded }: { clerkUser: UserResource | null; isLoaded: boolean }) {
   const t = useTranslations('settings');
   const { locale } = useParams<{ locale: string }>();
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isLoaded } = useUser();
+  const user = clerkUser;
 
   const [theme, setTheme] = useState<Theme>('dark');
   const [fieldMode, setFieldMode] = useState(false);
@@ -380,4 +383,14 @@ export default function SettingsPage() {
       )}
     </div>
   );
+}
+
+function SettingsWithAuth() {
+  const { user, isLoaded } = useUser();
+  return <SettingsContent clerkUser={user ?? null} isLoaded={isLoaded} />;
+}
+
+export default function SettingsPage() {
+  if (clerkEnabled) return <SettingsWithAuth />;
+  return <SettingsContent clerkUser={null} isLoaded={true} />;
 }

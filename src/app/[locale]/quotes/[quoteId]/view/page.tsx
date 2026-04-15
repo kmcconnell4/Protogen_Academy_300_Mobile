@@ -11,6 +11,8 @@ import { useAuth } from '@clerk/nextjs';
 import type { Quote, Product, Job } from '@/lib/mock/types';
 import Button from '@/components/ui/Button';
 
+const clerkEnabled = (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? '').startsWith('pk_');
+
 interface ResolvedLineItem {
   product: Product | undefined;
   quantity: number;
@@ -19,10 +21,9 @@ interface ResolvedLineItem {
   notes?: string;
 }
 
-export default function QuoteViewPage() {
+function QuoteContent({ isSignedIn }: { isSignedIn: boolean }) {
   const t = useTranslations('quotes');
   const { quoteId } = useParams<{ quoteId: string }>();
-  const { isSignedIn } = useAuth();
 
   const [quote, setQuote] = useState<Quote | null>(null);
   const [job, setJob] = useState<Job | null>(null);
@@ -379,4 +380,14 @@ export default function QuoteViewPage() {
       </div>
     </div>
   );
+}
+
+function QuoteWithAuth() {
+  const { isSignedIn } = useAuth();
+  return <QuoteContent isSignedIn={isSignedIn ?? false} />;
+}
+
+export default function QuoteViewPage() {
+  if (clerkEnabled) return <QuoteWithAuth />;
+  return <QuoteContent isSignedIn={false} />;
 }

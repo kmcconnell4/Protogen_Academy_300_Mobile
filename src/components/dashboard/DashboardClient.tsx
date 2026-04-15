@@ -9,13 +9,19 @@ import GlobalSearchBar from '@/components/search/GlobalSearchBar';
 import Button from '@/components/ui/Button';
 import type { Job, Order } from '@/lib/mock/types';
 
+const clerkEnabled = (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? '').startsWith('pk_');
+
 interface DashboardClientProps {
   jobs: Job[];
   orders: Order[];
 }
 
-export default function DashboardClient({ jobs, orders }: DashboardClientProps) {
-  const { user } = useUser();
+interface UserSlice {
+  firstName?: string | null;
+  lastName?: string | null;
+}
+
+function DashboardBody({ jobs, orders, user }: DashboardClientProps & { user: UserSlice | null }) {
   const t = useTranslations('dashboard');
   const locale = useLocale();
   const router = useRouter();
@@ -133,4 +139,14 @@ export default function DashboardClient({ jobs, orders }: DashboardClientProps) 
       </section>
     </div>
   );
+}
+
+function DashboardWithAuth(props: DashboardClientProps) {
+  const { user } = useUser();
+  return <DashboardBody {...props} user={user ?? null} />;
+}
+
+export default function DashboardClient(props: DashboardClientProps) {
+  if (clerkEnabled) return <DashboardWithAuth {...props} />;
+  return <DashboardBody {...props} user={null} />;
 }
