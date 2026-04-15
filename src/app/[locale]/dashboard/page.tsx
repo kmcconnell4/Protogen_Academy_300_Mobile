@@ -4,6 +4,9 @@ import { getOrders } from '@/lib/api/orders';
 import DashboardClient from '@/components/dashboard/DashboardClient';
 import { SkeletonCard } from '@/components/ui/Skeleton';
 
+// Auth-protected, user-specific — never statically prerender
+export const dynamic = 'force-dynamic';
+
 async function DashboardData() {
   const [jobs, orders] = await Promise.all([getJobs(), getOrders()]);
   return <DashboardClient jobs={jobs} orders={orders} />;
