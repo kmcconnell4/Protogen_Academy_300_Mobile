@@ -9,6 +9,12 @@ import SearchTrigger from '@/components/search/SearchTrigger';
 import OfflineBanner from '@/components/ui/OfflineBanner';
 import ServiceWorkerRegistrar from '@/components/ui/ServiceWorkerRegistrar';
 
+// Real Clerk publishable keys always start with pk_test_ or pk_live_
+const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? '';
+const clerkConfigured =
+  clerkPublishableKey.startsWith('pk_test_') ||
+  clerkPublishableKey.startsWith('pk_live_');
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -24,19 +30,22 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
 
-  return (
-    <ClerkProvider>
-      <NextIntlClientProvider locale={locale} messages={messages}>
-        <ServiceWorkerRegistrar />
-        <OfflineBanner />
-        <PageTransition>
-          <main style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
-            {children}
-          </main>
-        </PageTransition>
-        <BottomNav />
-        <SearchTrigger />
-      </NextIntlClientProvider>
-    </ClerkProvider>
+  const content = (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <ServiceWorkerRegistrar />
+      <OfflineBanner />
+      <PageTransition>
+        <main style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
+          {children}
+        </main>
+      </PageTransition>
+      <BottomNav />
+      <SearchTrigger />
+    </NextIntlClientProvider>
   );
+
+  if (clerkConfigured) {
+    return <ClerkProvider publishableKey={clerkPublishableKey}>{content}</ClerkProvider>;
+  }
+  return content;
 }
